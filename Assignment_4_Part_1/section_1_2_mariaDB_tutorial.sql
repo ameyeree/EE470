@@ -3,16 +3,16 @@ SHOW DATABASES;
 -- Use desired database (at this time, my only database)
 USE u301268454_AnthonyMeyer;
 
-/*
+
 -- Create Table
 CREATE TABLE t2(
 	name VARCHAR(30) CHECK (CHAR_LENGTH(name)>2),
     start_date DATE,
     end_date DATE CHECK (start_date IS NULL OR end_date IS NULL OR start_date<end_date)
 );
-*/
 
-/*
+
+
 -- Insert Content into t2 Table
  INSERT INTO t2(name, start_date, end_date) VALUES('Ione', '2003-12-15', '2014-11-09');
 -- INSERT INTO t2(name, start_date, end_date) VALUES('Io', '2003-12-15', '2014-11-09'); -- Will fail because name len == 2
@@ -40,11 +40,11 @@ CREATE TABLE Book(
 
 -- Show Tables and see structure of Book table
 SHOW TABLES;
-DESC Book;
+-- DESC Book;
 
 -- Insert books into Book
 INSERT INTO Book (id, name) VALUES (1, 'MariaDB Book');
-INSERT INTO Book (id, name) VALUES (2, "SQLDB Book');
+INSERT INTO Book (id, name) VALUES (2, 'SQLDB Book');
 
 
 -- View entries of Book Table
@@ -79,16 +79,12 @@ INSERT INTO Book (id, name) VALUES
 (4, 'MariaDB Book4'),
 (5, 'MariaDB Book5');
 
-
-
 INSERT INTO Price (id, price) VALUES
 (1, 251),
 (2, 252),
 (3, 223),
 (4, 194),
 (5, 305);
-
-
 
 -- View Price Table
 SELECT * from Price;
@@ -97,18 +93,14 @@ SELECT * from Price;
 -- Additional note: This was on line 131 in the tutorial
 INSERT INTO Price (id, price) VALUES (6, 251)
 
-
 -- Change price for id1 to 250
 UPDATE Price SET price = 250 WHERE id =1;
 
 -- Change Book for id1 to MariaDB Book1a
 UPDATE Book SET name = 'MariaDB Book1a' WHERE id = 1;
 
-
-
 -- Delete last record from the table
 DELETE FROM Price WHERE id = 6;
-
 
 -- Display all prices less than 250
 SELECT * FROM Price WHERE price < 250;
@@ -122,9 +114,71 @@ SELECT name FROM Book WHERE name LIKE '%4';
 -- Show all prices that start with 2, and order from low to high
 SELECT * FROM Price WHERE price LIKE '2%' ORDER BY price;
 
-
-
 -- Join price column from Price table with name from Book Table
 -- into a single table.
 SELECT Book.name, Price.price FROM Book INNER JOIN Price ON Book.id = Price.id;
-*/
+
+
+-- There is a portion in the tutorial that's dropping to drop Primary key from a websites table, which does not exist
+-- Skipping that section
+
+-- Create Book2 table
+CREATE TABLE Book2(
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+-- Create Price2 table
+CREATE TABLE Price2(
+    id INT NOT NULL,
+    price float NOT NULL,
+    FOREIGN KEY (id) REFERENCES Book2(id)
+);
+
+-- Insert Books into Book2
+INSERT INTO Book2 (id, name) VALUES
+(1, 'MariaDB Book1'),
+(2, 'MariaDB Book2'),
+(3, 'MariaDB Book3'),
+(4, 'MariaDB Book4'),
+(5, 'MariaDB Book5');
+
+-- Insert a new book
+INSERT INTO Book2 (id, name) VALUES (6, 'MariaDB Book16');
+
+-- Now insert price for that book (this has to be done after inserting book)
+INSERT INTO Price2 (id, price) VALUES (6, 251);
+
+-- Create View of Book2 and Price2
+CREATE VIEW COMBINED AS SELECT
+	Book2.name,
+    Book2.id,
+    Price2.price
+FROM
+	Book2, Price2
+WHERE
+	Book2.id = Price2.id;
+
+-- NOTE: This will only display Book and Price 6 because those are the only ones with prices
+-- Created in this tutorial
+SELECT * FROM COMBINED;
+
+
+-- For report, display the following:
+-- Tables for Book and Price (separately)
+SELECT * FROM Book;
+SELECT * FROM Price;
+
+-- Combined tables of Book and Price (not Book2 and Price2)
+CREATE VIEW FINAL_COMBINED AS SELECT
+	Book.name,
+    -- Book.id,
+    Price.price
+FROM
+	Book, Price
+WHERE
+	Book.id = Price.id;
+
+SELECT * FROM FINAL_COMBINED;
+
