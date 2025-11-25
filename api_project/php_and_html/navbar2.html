@@ -1,0 +1,37 @@
+<!-- navbar.html -->
+<style>
+  /* Styles scoped to just the navbar */
+  #global-nav {
+    border-radius: 15px 50px;
+    background-color: DarkSlateGray;
+    padding: 20px;
+    width: 750px;
+    margin: 20px auto;
+    color: white;
+    text-align: center;
+    display: block;
+    box-sizing: border-box;
+  }
+  #global-nav a {
+    color: white !important;           /* beats page-wide a { color: ... } */
+    text-decoration: none;
+    margin: 0 24px;
+    font-weight: 500;
+  }
+  #global-nav a:hover, #global-nav a:focus {
+    text-decoration: underline;
+  }
+  #global-nav .divider {
+    height: 0;
+    border: none;
+    border-top: 2px solid #78aeb0;     /* light bluish line like your screenshot */
+    margin: 12px 0 0 0;
+  }
+</style>
+
+<nav id="global-nav" role="navigation" aria-label="Main">
+  <a href="../index.html">Home</a>
+  <a href="led_control.php">LED Control</a>
+  <a href="rgb_control.php">RGB Control</a>
+  <hr class="divider">
+</nav>
